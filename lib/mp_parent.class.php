@@ -31,23 +31,29 @@ class multi_process
 			
 		endswitch;
 		
-		if(!$q = @$this->db->query('SELECT `id` FROM '.DB_NAME.' LIMIT 1'))
-		{
-			$this->db->query("
-				CREATE TABLE ".DB_NAME." (
-					id 			INTEGER default '1',
-					envelope 	CHAR (10),
-					pid 		INTEGER,
-					status 		INTEGER default '0',
-					variables 	TEXT,
-					time_limit 	INT,
-					output		TEXT,
-					PRIMARY KEY (id)
-				);
-			");
-		}
+		if($this->db):
+		
+			if(!$this->db->query('SELECT COUNT(*) FROM '.DB_NAME.'')):
+	
+				$this->db->query("
+					CREATE TABLE ".DB_NAME." (
+						id 			INTEGER default '1',
+						envelope 	CHAR (10),
+						pid 		INTEGER,
+						status 		INTEGER default '0',
+						variables 	TEXT,
+						time_limit 	INT,
+						output		TEXT,
+						PRIMARY KEY (id)
+					);
+				");
+				
+			endif;
+		
+		endif;
 		
 		$this->envelope = $this->createEnvelopeName();
+		
 	}
 	
 	/**
@@ -64,11 +70,11 @@ class multi_process
 			if (file_exists($process)):
 			
 				$query = "
-				INSERT INTO `" . DB_NAME . "`
+				INSERT INTO " . DB_NAME . "
 				(
-					`envelope`, 
-					`variables`,
-					`time_limit`
+					envelope, 
+					variables,
+					time_limit
 				)
 				VALUES 
 				(
@@ -93,8 +99,19 @@ class multi_process
 					break;
 				endswitch;
 	
-				exec("nohup php -f " . $process . " id=" . $id . " > /dev/null &");
-			
+				exec("nohup /usr/local/bin/php -f " . $process . " id=" . $id . " > /dev/null &");
+				
+				/**
+				* The following is for debugging only
+				* 
+				exec("nohup /usr/local/bin/php -f " . $process . " id=" . $id . "  &", $output);
+				
+				echo "<pre>";
+				print_r($output);
+				echo "</pre>";
+				
+				*/
+				
 			endif;
 			
 		endforeach;
@@ -139,9 +156,9 @@ class multi_process
 	public function returnStatus()
 	{
 		$query = "
-		SELECT `id` 
-		FROM `" . DB_NAME . "` 
-		WHERE `envelope` = '" . $this->envelope . "' AND `status` = 0";
+		SELECT id 
+		FROM " . DB_NAME . " 
+		WHERE envelope = '" . $this->envelope . "' AND status = 0";
 		
 		$result = $this->db->query($query);
 		
@@ -177,9 +194,9 @@ class multi_process
 		$output = array();
 		
 		$query = "
-		SELECT `id`, `output` 
-		FROM `" . DB_NAME . "` 
-		WHERE `envelope` = '" . $this->envelope . "'";
+		SELECT id, output 
+		FROM " . DB_NAME . " 
+		WHERE envelope = '" . $this->envelope . "'";
 		
 		$result = $this->db->query($query);
 		
@@ -231,9 +248,9 @@ class multi_process
 		* The probability of this happening is essentially zero
 		*/
 		$query = "
-		SELECT `id` 
+		SELECT id 
 		FROM " . DB_NAME . " 
-		WHERE `envelope` = '" . $envelope . "'";
+		WHERE envelope = '" . $envelope . "'";
 		
 		$result = $this->db->query($query);
 		
@@ -267,9 +284,9 @@ class multi_process
 	{
 		
 		$query = "
-		SELECT `id` 
-		FROM `" . DB_NAME . "` 
-		WHERE `envelope` = '" . $this->envelope . "'";
+		SELECT id 
+		FROM " . DB_NAME . " 
+		WHERE envelope = '" . $this->envelope . "'";
 		
 		$result = $this->db->query($query);
 		
@@ -295,7 +312,7 @@ class multi_process
 			break;
 		endswitch;
 		
-		$this->db->query("DELETE FROM `" . DB_NAME . " WHERE `envelope` = '" . $this->envelope . "'");
+		$this->db->query("DELETE FROM " . DB_NAME . " WHERE envelope = '" . $this->envelope . "'");
 	}
 	
 	/**

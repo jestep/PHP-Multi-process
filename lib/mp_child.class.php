@@ -11,7 +11,7 @@ class childProcess
 	* The child will pass the header arguments to this class
 	* We then get the timelimit, envelope, and stored variables
 	*/
-	private function __construct($args)
+	public function __construct($args)
 	{
 		
 		for($i=1;$i<count($args);$i++):
@@ -24,9 +24,9 @@ class childProcess
 		$id = (int)$this->request['id'];
 		
 		$child_query = "
-		SELECT `envelope`, `variables`, `time_limit` 
-		FROM `".DB_NAME."`
-		WHERE `id` = ".$id." LIMIT 1";
+		SELECT id, envelope, variables, time_limit 
+		FROM ".DB_NAME."
+		WHERE id = ".$id." LIMIT 1";
 		
 		switch(CACHE_METHOD):
 			case 'sqlite':
@@ -70,9 +70,9 @@ class childProcess
 	public function setProcessComplete($output = NULL)
 	{
 		$query = "
-		UPDATE `" . DB_NAME . "`
-		SET `pid` = " . getmypid() . " ,`status` = 1, `output` = '" . base64_encode($output) . "'
-		WHERE `envelope` = '" . $this->child['envelope'] . "' AND `id` = " . $this->child['id'];
+		UPDATE " . DB_NAME . "
+		SET pid = '" . getmypid() . "', status = '1', output = '" . base64_encode($output) . "'
+		WHERE envelope = '" . $this->child['envelope'] . "' AND id = '" . $this->child['id'] . "'";
 		
 		$this->db->query($query);
 		
