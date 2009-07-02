@@ -19,17 +19,18 @@ $mp->createChildren($processes);
 
 /**
 * Reset the time limit after we spawn our background processes
-* Add 1 second so that the children always timeout first
+* Add 5 seconds total so that the children always timeout first
+* Worst case should only take a few milliseconds once the children are finished
 */
 ini_set("max_execution_time",DEFAULT_TIMELIMIT+1);
 
 $mp->checkStatus();
 
 /**
-* Here you can get the putput from the children
+* Here you can get the output from the children
 * $output = $mp->returnOutput();
 *
-* @return array('child_id','output');
+* @return array((int),(string)); --array('child_id','output');
 */
 
 $mp->cleanup();
