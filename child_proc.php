@@ -8,6 +8,7 @@ $mp = new childProcess($argv);
 /**
 * Set the execution time limit for this script to process
 */
+
 ini_set("max_execution_time",$mp->child['time_limit']);
 
 /*-----------------BEGIN YOUR OWN CODE HERE------------------------*/
@@ -29,4 +30,5 @@ $variables = $mp->getVariables();
 * You can also send output to the parent through the same function
 * $mp->setProcessComplete($output);
 */
+
 $mp->setProcessComplete();

@@ -54,6 +54,7 @@ class childProcess
 	
 	/**
 	* Returns our variables that were stored in the cache database
+	*
 	* @return unknown
 	*/
 	public function getVariables()

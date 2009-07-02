@@ -25,4 +25,11 @@ ini_set("max_execution_time",DEFAULT_TIMELIMIT+1);
 
 $mp->checkStatus();
 
+/**
+* Here you can get the putput from the children
+* $output = $mp->returnOutput();
+*
+* @return array('child_id','output');
+*/
+
 $mp->cleanup();

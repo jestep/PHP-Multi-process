@@ -133,6 +133,7 @@ class multi_process
 	/**
 	* Check to see if there are any uncompleted processes
 	* Return true if we're done, false if we're still processing
+	*
 	* @return boolian
 	*/
 	public function returnStatus()
@@ -167,7 +168,51 @@ class multi_process
 	}
 	
 	/**
+	* Returns output from the children
+	*
+	* @return array
+	*/
+	public function returnOutput()
+	{
+		$output = array();
+		
+		$query = "
+		SELECT `id`, `output` 
+		FROM `" . DB_NAME . "` 
+		WHERE `envelope` = '" . $this->envelope . "'";
+		
+		$result = $this->db->query($query);
+		
+		switch(CACHE_METHOD):
+			case 'sqlite':
+			
+				while($row = $result->fetch(SQLITE_ASSOC)):
+					
+					$output[$row['id']] = base64_decode($row['output']);
+				
+				endwhile;
+				
+			break;
+			
+			case 'mysql':
+				
+				
+				while($row = $result->fetch_assoc()):
+					
+					$output[$row['id']] = base64_decode($row['output']);
+				
+				endwhile;
+			
+			break;
+		endswitch;
+		
+		return $output;
+		
+	}
+	
+	/**
 	* Generate a random string name for our envelope
+	*
 	* @param int $length
 	* @return string
 	*/
@@ -231,9 +276,9 @@ class multi_process
 		switch(CACHE_METHOD):
 			case 'sqlite':
 			
-				while($this->child = $result->fetch(SQLITE_ASSOC)):
+				while($child = $result->fetch(SQLITE_ASSOC)):
 					
-					$this->kill($this->child['pid']);
+					$this->kill($child['pid']);
 				
 				endwhile;
 				
@@ -241,10 +286,9 @@ class multi_process
 			
 			case 'mysql':
 				
-				
-				while($this->child = $result->fetch_assoc()):
+				while($child = $result->fetch_assoc()):
 					
-					$this->kill($this->child['pid']);
+					$this->kill($child['pid']);
 				
 				endwhile;
 			
