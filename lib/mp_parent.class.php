@@ -62,12 +62,12 @@ class multi_process
 	* @param array $processes
 	* @param unknown $variables
 	*/
-	public function createChildren($processes = array(), $variables = NULL){
+	public function createChildren($processes = array()){
 		
-		foreach($processes as $key => $process):
+		foreach($processes as $process):
 			
 			//Only run the process if the file exists
-			if (file_exists($process)):
+			if (file_exists($process['path'])):
 			
 				$query = "
 				INSERT INTO " . DB_NAME . "
@@ -79,7 +79,7 @@ class multi_process
 				VALUES 
 				(
 					'" . $this->envelope . "', 
-					'" . base64_encode(serialize($variables)) . "',
+					'" . base64_encode(serialize($process['variables'])) . "',
 					" . DEFAULT_TIMELIMIT . "
 				)";
 				
@@ -99,12 +99,12 @@ class multi_process
 					break;
 				endswitch;
 	
-				exec("nohup /usr/local/bin/php -f " . $process . " id=" . $id . " > /dev/null &");
+				exec("nohup /usr/local/bin/php -f " . $process['path'] . " id=" . $id . " > /dev/null &");
 				
 				/**
 				* The following is for debugging only
 				* 
-				exec("nohup /usr/local/bin/php -f " . $process . " id=" . $id . "  &", $output);
+				exec("nohup /usr/local/bin/php -f " . $process['path'] . " id=" . $id . "  &", $output);
 				
 				echo "<pre>";
 				print_r($output);
