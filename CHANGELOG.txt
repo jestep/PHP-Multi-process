@@ -7,7 +7,10 @@ Version 1.1.1 (Beta)
         	Removed $variables parameter
         	Changed $processes parameter to an array which now includes 'path' and 'variables' associative keys
 				'variables' are now passed to children through this array key instead of the $variables parameter
-
+		
+		Updated childProcess
+			Changed property db to private static from public
+			
 Version 1.1 (Beta)
 
     2009-07-02

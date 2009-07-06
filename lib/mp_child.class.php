@@ -4,6 +4,8 @@ require_once('mp_config.php');
 
 class childProcess
 {
+	
+	private static $db;
 	public $child = array();
 	
 	/**
