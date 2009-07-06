@@ -60,7 +60,6 @@ class multi_process
 	* Add a process to the database and start it
 	*
 	* @param array $processes
-	* @param unknown $variables
 	*/
 	public function createChildren($processes = array()){
 		

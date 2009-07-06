@@ -7,8 +7,7 @@ require_once('lib/mp_parent.class.php');
 * Add an array to the $processes array for each child
 * The processes array is an associative array('path'=>'filename.php','variables'=>array());
 * You can add variables to send to the process through the same array
-* For some servers, you will need to enter the full path for each child
-* Ex: /home/myuser/public_html/processes/process_1.php
+* For some servers, you will need to enter the full path for each child (Ex: /home/myuser/public_html/processes/process_1.php)
 */
 
 $processes[] = array('path'=>'process_1.php',
